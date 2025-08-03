@@ -13,14 +13,19 @@ import {
   Settings,
   Bell,
   Zap,
+  FileText,
+  BrainCircuit,
 } from 'lucide-react';
+
+type Screen = 'question' | 'mapping' | 'revelation' | 'journal' | 'learning';
 
 interface LayoutProps {
   children: React.ReactNode;
   currentScreen: string;
+  onNavigate?: (screen: Screen) => void;
 }
 
-export function Layout({ children, currentScreen }: LayoutProps) {
+export function Layout({ children, currentScreen, onNavigate }: LayoutProps) {
   const { theme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notificationCount] = useState(3);
@@ -33,6 +38,20 @@ export function Layout({ children, currentScreen }: LayoutProps) {
     setMobileMenuOpen(false);
   };
 
+  const handleNavClick = (screen: Screen) => {
+    if (onNavigate) {
+      onNavigate(screen);
+    }
+    closeMobileMenu();
+  };
+
+  const menuItems: Array<{ id: Screen; label: string; icon: any }> = [
+    { id: 'question', label: 'Accueil', icon: Home },
+    { id: 'journal', label: 'Journal', icon: FileText },
+    { id: 'learning', label: 'Apprentissage', icon: BrainCircuit },
+    { id: 'revelation', label: 'Analyses', icon: PieChart },
+  ];
+
   return (
     <div className={`min-h-screen w-full ${theme.gradient} ${theme.text} transition-colors duration-500`}>
       <header className="glassmorphism sticky top-0 z-50 p-4">
@@ -43,6 +62,27 @@ export function Layout({ children, currentScreen }: LayoutProps) {
             </div>
             <h1 className="text-2xl font-bold text-white">Rivela</h1>
           </div>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-4 text-white">
+            {menuItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => handleNavClick(item.id)}
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
+                    currentScreen === item.id 
+                      ? 'bg-white/20 text-white' 
+                      : 'hover:bg-white/10 text-white/80'
+                  }`}
+                >
+                  <Icon size={16} />
+                  <span className="text-sm">{item.label}</span>
+                </button>
+              );
+            })}
+          </nav>
 
           <div className="hidden md:flex items-center space-x-6 text-white">
             <span className="text-sm opacity-80">Explorateur Financier</span>
@@ -83,62 +123,23 @@ export function Layout({ children, currentScreen }: LayoutProps) {
               </button>
             </div>
             <nav className="flex flex-col space-y-4">
-              <a
-                href="#"
-                className="flex items-center p-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-                onClick={closeMobileMenu}
-              >
-                <Home size={20} className="mr-3" />
-                <span>Accueil</span>
-              </a>
-              <a
-                href="#"
-                className="flex items-center p-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-                onClick={closeMobileMenu}
-              >
-                <BarChart3 size={20} className="mr-3" />
-                <span>Tableau de bord</span>
-              </a>
-              <a
-                href="#"
-                className="flex items-center p-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-                onClick={closeMobileMenu}
-              >
-                <BookOpen size={20} className="mr-3" />
-                <span>Apprentissage</span>
-              </a>
-              <a
-                href="#"
-                className="flex items-center p-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-                onClick={closeMobileMenu}
-              >
-                <PieChart size={20} className="mr-3" />
-                <span>Analyses</span>
-              </a>
-              <a
-                href="#"
-                className="flex items-center p-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-                onClick={closeMobileMenu}
-              >
-                <User size={20} className="mr-3" />
-                <span>Profil</span>
-              </a>
-              <a
-                href="#"
-                className="flex items-center p-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-                onClick={closeMobileMenu}
-              >
-                <Settings size={20} className="mr-3" />
-                <span>Paramètres</span>
-              </a>
-              <a
-                href="#"
-                className="flex items-center p-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-                onClick={closeMobileMenu}
-              >
-                <HelpCircle size={20} className="mr-3" />
-                <span>Aide</span>
-              </a>
+              {menuItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavClick(item.id)}
+                    className={`flex items-center p-3 rounded-lg transition-colors ${
+                      currentScreen === item.id 
+                        ? 'bg-white/20' 
+                        : 'bg-white/10 hover:bg-white/20'
+                    }`}
+                  >
+                    <Icon size={20} className="mr-3" />
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
               <div className="mt-4 pt-4 border-t border-white/20">
                 <ThemeSelector />
               </div>

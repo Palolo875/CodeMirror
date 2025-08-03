@@ -95,23 +95,45 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [themeName, setThemeName] = useState('classic');
+  const [isInitialized, setIsInitialized] = useState(false);
 
+  // Load saved theme on mount
   useEffect(() => {
     const savedTheme = localStorage.getItem('rivela-theme');
     if (savedTheme && themes[savedTheme]) {
       setThemeName(savedTheme);
     }
+    setIsInitialized(true);
   }, []);
 
+  // Apply theme classes when theme changes
   useEffect(() => {
-    localStorage.setItem('rivela-theme', themeName);
-    // Apply theme class to document body
-    const body = document.body;
-    Object.keys(themes).forEach(theme => {
-      body.classList.remove(`theme-${theme}`);
-    });
-    body.classList.add(`theme-${themeName}`);
-  }, [themeName]);
+    if (!isInitialized) return;
+
+    const applyTheme = () => {
+      const body = document.body;
+      const root = document.documentElement;
+      
+      // Remove all existing theme classes
+      Object.keys(themes).forEach(theme => {
+        body.classList.remove(`theme-${theme}`);
+        root.classList.remove(`theme-${theme}`);
+      });
+      
+      // Add current theme class to both body and root
+      body.classList.add(`theme-${themeName}`);
+      root.classList.add(`theme-${themeName}`);
+      
+      // Save to localStorage
+      localStorage.setItem('rivela-theme', themeName);
+    };
+
+    // Apply immediately and also after a small delay to ensure CSS is loaded
+    applyTheme();
+    const timeout = setTimeout(applyTheme, 100);
+
+    return () => clearTimeout(timeout);
+  }, [themeName, isInitialized]);
 
   const setTheme = (newThemeName: string) => {
     if (themes[newThemeName]) {
