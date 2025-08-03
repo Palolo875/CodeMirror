@@ -134,9 +134,8 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <ThemeProvider>
-        <Layout currentScreen={currentScreen} onNavigate={goToScreen}>
-        {currentScreen === 'question' && (
+  <Layout currentScreen={currentScreen} onNavigate={goToScreen}>    <ThemeProvider>
+{currentScreen === 'question' && (
           <QuestionScreen
             onSubmit={handleQuestionSubmit}
             recentExplorations={recentExplorations}
