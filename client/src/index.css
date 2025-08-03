@@ -147,6 +147,54 @@
     --rivela-secondary: hsl(158, 64%, 35%);
     --rivela-accent: hsl(60, 87%, 55%);
   }
+
+  .theme-aurora {
+    --rivela-gradient-start: hsl(280, 85%, 65%);
+    --rivela-gradient-end: hsl(180, 75%, 55%);
+    --rivela-primary: hsl(280, 85%, 65%);
+    --rivela-secondary: hsl(180, 75%, 55%);
+    --rivela-accent: hsl(320, 90%, 60%);
+  }
+
+  .theme-cosmic {
+    --rivela-gradient-start: hsl(240, 60%, 25%);
+    --rivela-gradient-end: hsl(300, 70%, 35%);
+    --rivela-primary: hsl(240, 60%, 25%);
+    --rivela-secondary: hsl(300, 70%, 35%);
+    --rivela-accent: hsl(45, 100%, 65%);
+  }
+
+  .theme-desert {
+    --rivela-gradient-start: hsl(30, 80%, 60%);
+    --rivela-gradient-end: hsl(15, 90%, 50%);
+    --rivela-primary: hsl(30, 80%, 60%);
+    --rivela-secondary: hsl(15, 90%, 50%);
+    --rivela-accent: hsl(220, 75%, 55%);
+  }
+
+  .theme-glacial {
+    --rivela-gradient-start: hsl(200, 60%, 75%);
+    --rivela-gradient-end: hsl(220, 70%, 85%);
+    --rivela-primary: hsl(200, 60%, 75%);
+    --rivela-secondary: hsl(220, 70%, 85%);
+    --rivela-accent: hsl(340, 80%, 60%);
+  }
+
+  .theme-volcanic {
+    --rivela-gradient-start: hsl(0, 75%, 45%);
+    --rivela-gradient-end: hsl(25, 85%, 55%);
+    --rivela-primary: hsl(0, 75%, 45%);
+    --rivela-secondary: hsl(25, 85%, 55%);
+    --rivela-accent: hsl(60, 100%, 70%);
+  }
+
+  .theme-tropical {
+    --rivela-gradient-start: hsl(160, 70%, 50%);
+    --rivela-gradient-end: hsl(120, 65%, 45%);
+    --rivela-primary: hsl(160, 70%, 50%);
+    --rivela-secondary: hsl(120, 65%, 45%);
+    --rivela-accent: hsl(290, 85%, 65%);
+  }
 }
 
 @keyframes fadeIn {

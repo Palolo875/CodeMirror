@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Layout } from './components/Layout';
 import { QuestionScreen } from './components/screens/QuestionScreen';
 import { MappingScreen } from './components/screens/MappingScreen';
-import { RevelationScreen } from './components/screens/RevelationScreen';
+import { RevelationScreenAdvanced as RevelationScreen } from './components/screens/RevelationScreenAdvanced';
 import { JournalScreen } from './components/screens/JournalScreen';
 import { LearningScreen } from './components/screens/LearningScreen';
 import { useLocalStorage } from './hooks/useLocalStorage';
