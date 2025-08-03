@@ -7,7 +7,7 @@ export function exportToPDF(data: {
   insights: Insight[];
 }) {
   // Simulate PDF export - in a real app, you'd use a library like jsPDF
-  console.log('Exporting to PDF:', data);
+  // Export data to PDF format
   
   // Create a simple text version for download
   const content = `

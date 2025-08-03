@@ -111,7 +111,7 @@ export function RevelationScreen({
   };
 
   const handleShareSocial = (platform: string) => {
-    console.log(`Sharing on ${platform}`);
+    // TODO: Implement actual social sharing integration
     setShareSuccess(platform);
     setTimeout(() => setShareSuccess(null), 3000);
     setIsShareMenuOpen(false);
