@@ -6,6 +6,20 @@ export function ThemeSelector() {
   const { theme, themeName, setTheme, themes } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
 
+  // Couleurs représentatives pour chaque thème
+  const themeColors: Record<string, string> = {
+    classic: 'bg-gradient-to-r from-purple-500 to-blue-500',
+    sunset: 'bg-gradient-to-r from-orange-500 to-pink-500',
+    ocean: 'bg-gradient-to-r from-blue-400 to-blue-600',
+    forest: 'bg-gradient-to-r from-green-500 to-green-700',
+    aurora: 'bg-gradient-to-r from-purple-400 to-cyan-400',
+    cosmic: 'bg-gradient-to-r from-indigo-900 to-purple-900',
+    desert: 'bg-gradient-to-r from-orange-400 to-red-500',
+    glacial: 'bg-gradient-to-r from-blue-200 to-blue-400',
+    volcanic: 'bg-gradient-to-r from-red-600 to-orange-500',
+    tropical: 'bg-gradient-to-r from-green-400 to-teal-500'
+  };
+
   return (
     <div className="relative">
       <button
@@ -23,7 +37,7 @@ export function ThemeSelector() {
             className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 top-full mt-2 w-48 rounded-lg glassmorphism shadow-lg z-20">
+          <div className="absolute right-0 top-full mt-2 w-56 rounded-lg glassmorphism shadow-lg z-20 max-h-64 overflow-y-auto">
             <div className="py-2">
               {Object.entries(themes).map(([key, themeOption]) => (
                 <button
@@ -37,13 +51,11 @@ export function ThemeSelector() {
                   }`}
                 >
                   <div
-                    className={`w-4 h-4 rounded-full ${key === 'classic' ? 'bg-purple-500' : 
-                      key === 'sunset' ? 'bg-orange-500' : 
-                      key === 'ocean' ? 'bg-blue-500' : 'bg-green-500'}`}
+                    className={`w-4 h-4 rounded-full ${themeColors[key] || 'bg-gray-500'}`}
                   />
-                  <span className="text-white text-sm">{themeOption.name}</span>
+                  <span className="text-white text-sm flex-1">{themeOption.name}</span>
                   {themeName === key && (
-                    <div className="ml-auto w-2 h-2 bg-white rounded-full" />
+                    <div className="w-2 h-2 bg-white rounded-full" />
                   )}
                 </button>
               ))}

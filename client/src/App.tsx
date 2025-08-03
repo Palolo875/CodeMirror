@@ -56,9 +56,9 @@ export default function App() {
     }
   }, [shouldShowFeedback]);
 
-  const goToScreen = (screen: Screen) => {
+  const goToScreen = useCallback((screen: Screen) => {
     setCurrentScreen(screen);
-  };
+  }, []);
 
   // Memoize callback functions to prevent unnecessary re-renders
   const handleQuestionSubmit = useCallback((q: string) => {
@@ -134,9 +134,8 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <ThemeProvider>
-        <Layout currentScreen={currentScreen}>
-        {currentScreen === 'question' && (
+  <Layout currentScreen={currentScreen} onNavigate={goToScreen}>    <ThemeProvider>
+{currentScreen === 'question' && (
           <QuestionScreen
             onSubmit={handleQuestionSubmit}
             recentExplorations={recentExplorations}
