@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Layout } from './components/Layout';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { QuestionScreen } from './components/screens/QuestionScreen';
 import { MappingScreen } from './components/screens/MappingScreen';
 import { RevelationScreenAdvanced as RevelationScreen } from './components/screens/RevelationScreenAdvanced';
@@ -36,39 +37,45 @@ export default function App() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [sessionCount, setSessionCount] = useLocalStorage('rivela-session-count', 0);
 
+  // Memoize recent explorations to avoid unnecessary recalculations
+  const recentExplorations = useMemo(() => journal.slice(0, 3), [journal]);
+
+  // Memoize session count increment check
+  const shouldShowFeedback = useMemo(() => {
+    return sessionCount === 3 || (journal.length > 0 && journal.length % 3 === 0);
+  }, [sessionCount, journal.length]);
+
   // Increment session count and show feedback after several sessions
   useEffect(() => {
     setSessionCount((prevCount: number) => prevCount + 1);
     // Show survey after 3 sessions or after saving several explorations
-    if (
-      sessionCount === 3 ||
-      (journal.length > 0 && journal.length % 3 === 0)
-    ) {
+    if (shouldShowFeedback) {
       setTimeout(() => {
         setShowFeedback(true);
       }, 60000); // Show after 1 minute of usage
     }
-  }, []);
+  }, [shouldShowFeedback]);
 
   const goToScreen = (screen: Screen) => {
     setCurrentScreen(screen);
   };
 
-  const handleQuestionSubmit = (q: string) => {
+  // Memoize callback functions to prevent unnecessary re-renders
+  const handleQuestionSubmit = useCallback((q: string) => {
     setQuestion(q);
     // Create new exploration ID
     const newExplorationId = uuidv4();
     setCurrentExplorationId(newExplorationId);
     goToScreen('mapping');
-  };
+  }, []);
 
-  const handleMappingComplete = (data: FinancialData, emotional: EmotionalContext) => {
+  const handleMappingComplete = useCallback((data: FinancialData, emotional: EmotionalContext) => {
     setFinancialData(data);
     setEmotionalContext(emotional);
     goToScreen('revelation');
-  };
+  }, []);
 
-  const saveExplorationToJournal = (insights: Insight[]) => {
+  const saveExplorationToJournal = useCallback((insights: Insight[]) => {
     if (!currentExplorationId) return;
 
     const newEntry: JournalEntry = {
@@ -83,9 +90,9 @@ export default function App() {
       }),
     };
     setJournal((prev: JournalEntry[]) => [newEntry, ...prev]);
-  };
+  }, [currentExplorationId, question, financialData, emotionalContext]);
 
-  const loadExplorationFromJournal = (explorationId: string) => {
+  const loadExplorationFromJournal = useCallback((explorationId: string) => {
     const exploration = journal.find((entry) => entry.id === explorationId);
     if (exploration) {
       setQuestion(exploration.question);
@@ -94,19 +101,19 @@ export default function App() {
       setCurrentExplorationId(explorationId);
       goToScreen('revelation');
     }
-  };
+  }, [journal]);
 
-  const deleteExplorationFromJournal = (explorationId: string) => {
+  const deleteExplorationFromJournal = useCallback((explorationId: string) => {
     setJournal((prev: JournalEntry[]) => prev.filter((entry) => entry.id !== explorationId));
-  };
+  }, []);
 
-  const handleFeedbackSubmit = (feedback: FeedbackData) => {
-    console.log('Feedback received:', feedback);
-    // Here, you could send the feedback to an API
+  const handleFeedbackSubmit = useCallback((feedback: FeedbackData) => {
+    // TODO: Send feedback to API endpoint
+    // For now, we'll just store it locally or send to analytics
     setShowFeedback(false);
-  };
+  }, []);
 
-  const resetToNewExploration = () => {
+  const resetToNewExploration = useCallback(() => {
     setQuestion('');
     setFinancialData({
       income: [],
@@ -123,15 +130,16 @@ export default function App() {
     });
     setCurrentExplorationId(null);
     goToScreen('question');
-  };
+  }, []);
 
   return (
-    <ThemeProvider>
-      <Layout currentScreen={currentScreen}>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <Layout currentScreen={currentScreen}>
         {currentScreen === 'question' && (
           <QuestionScreen
             onSubmit={handleQuestionSubmit}
-            recentExplorations={journal.slice(0, 3)}
+            recentExplorations={recentExplorations}
             onLoadExploration={loadExplorationFromJournal}
           />
         )}
@@ -188,7 +196,8 @@ export default function App() {
             />
           </div>
         )}
-      </Layout>
-    </ThemeProvider>
+        </Layout>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }

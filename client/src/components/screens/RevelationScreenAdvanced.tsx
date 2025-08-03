@@ -341,7 +341,7 @@ export function RevelationScreenAdvanced({
                 <AdvancedSimulator
                   financialData={financialData}
                   onSaveScenario={(scenario) => {
-                    console.log('Scenario saved:', scenario);
+                    // TODO: Save scenario to database or local storage
                   }}
                 />
               </motion.div>
@@ -358,7 +358,7 @@ export function RevelationScreenAdvanced({
                 <HiddenFeesDetector
                   financialData={financialData}
                   onFeesDetected={(fees) => {
-                    console.log('Hidden fees detected:', fees);
+                    // TODO: Alert user about detected hidden fees
                   }}
                 />
               </motion.div>

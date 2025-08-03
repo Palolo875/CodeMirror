@@ -24,9 +24,34 @@ export default defineConfig({
     },
   },
   root: path.resolve(import.meta.dirname, "client"),
+  optimizeDeps: {
+    include: [
+      "react",
+      "react-dom",
+      "react-hot-toast", 
+      "lucide-react",
+      "date-fns",
+      "uuid",
+      "zod"
+    ],
+  },
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    target: "esnext",
+    minify: "esbuild",
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"],
+          ui: ["lucide-react"],
+          charts: ["recharts", "apexcharts"],
+          utils: ["date-fns", "uuid", "zod"]
+        },
+      },
+    },
+    sourcemap: process.env.NODE_ENV === "development",
+    reportCompressedSize: false,
   },
   server: {
     fs: {

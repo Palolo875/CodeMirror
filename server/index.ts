@@ -43,8 +43,21 @@ app.use((req, res, next) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
-    res.status(status).json({ message });
-    throw err;
+    // Log error details for debugging
+    if (status >= 500) {
+      console.error('Server Error:', {
+        error: err.message,
+        stack: err.stack,
+        url: _req.url,
+        method: _req.method,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    res.status(status).json({ 
+      message: status >= 500 ? "Erreur interne du serveur" : message,
+      ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    });
   });
 
   // importantly only setup vite in development and after
